@@ -1,15 +1,34 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Search from "../components/Search";
 import beersJSON from "./../assets/beers.json";
-
+import axios from "axios";
+import beerImg from '../assets/beers.png'
 
 
 function AllBeersPage() {
   // Mock initial state, to be replaced by data from the API. Once you retrieve the list of beers from the Beers API store it in this state variable.
   const [beers, setBeers] = useState(beersJSON);
 
+ 
+useEffect(()=>{
 
+async function AllBeer(){
+
+
+  try{
+
+    const response=await axios.get('https://beers-api.edu.ironhack.com/beers')
+
+    setBeers(response.data)
+  }catch(error){
+console.log(error.message)
+  }
+}
+
+AllBeer();
+
+},[])
 
   // TASKS:
   // 1. Set up an effect hook to make a request to the Beers API and get a list with all the beers.
@@ -32,7 +51,7 @@ function AllBeersPage() {
                   <div className="card m-2 p-2 text-center" style={{ width: "24rem", height: "18rem" }}>
                     <div className="card-body">
                       <img
-                        src={beer.image_url}
+                        src={beerImg}
                         style={{ height: "6rem" }}
                         alt={"image of" + beer.name}
                       />
