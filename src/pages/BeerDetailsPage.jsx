@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import beersJSON from "./../assets/beers.json";
-
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import beerImg from '../assets/beers.png'
 
 function BeerDetailsPage() {
   // Mock initial state, to be replaced by data from the Beers API. Store the beer info retrieved from the Beers API in this state variable.
-  const [beer, setBeer] = useState(beersJSON[0]);
+  const [beer, setBeer] = useState(beersJSON);
 
   // React Router hook for navigation. We use it for the back button. You can leave this as it is.
   const navigate = useNavigate();
 
+const{beerId}=useParams()
 
+useEffect(()=>{
+
+async function singleBeer(){
+
+  try{
+
+    const response=await axios.get(`https://beers-api.edu.ironhack.com/beers/${beerId}`)
+    console.log(response.data)
+    setBeer(response.data)
+  }catch(error){
+console.log(error.message)
+  }
+}
+singleBeer()
+
+},[beerId])
 
   // TASKS:
   // 1. Get the beer ID from the URL, using the useParams hook.
@@ -26,7 +45,7 @@ function BeerDetailsPage() {
       {beer && (
         <>
           <img
-            src={beer.image_url}
+            src={beerImg}
             alt="Beer Image"
             height="300px"
             width="auto"
